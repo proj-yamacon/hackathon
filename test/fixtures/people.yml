@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  image_name: MyString
+  gender: 1
+  temperature_preference: 
+  comfortable_temperature: 1.5
+  comfortable_humidity: 1.5
+
+two:
+  name: MyString
+  image_name: MyString
+  gender: 1
+  temperature_preference: 
+  comfortable_temperature: 1.5
+  comfortable_humidity: 1.5

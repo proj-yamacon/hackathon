@@ -4,7 +4,7 @@ class CreatePeople < ActiveRecord::Migration
       t.string :name
       t.string :image_name
       t.integer :gender
-      t.int :temperature_preference
+      t.integer :temperature_preference
       t.float :comfortable_temperature
       t.float :comfortable_humidity
 

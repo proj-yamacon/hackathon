@@ -1,5 +1,16 @@
+USER = 'daikin'
+PASSWORD = 'pichonkun'
+URL_BASE = "https://#{USER}:#{PASSWORD}@api-10.daikin.ishikari-dc.net"
+
 class ZonesController < ApplicationController
   before_action :set_zone, only: [:show, :edit, :update, :destroy]
+
+  def get_current
+    machine_id = 4
+    url = "#{URL_BASE}/equipments/#{machine_id}/"
+    response = RestClient.get url
+    return JSON.parse(response.body)
+  end
 
   # GET /zones
   # GET /zones.json
@@ -11,6 +22,9 @@ class ZonesController < ApplicationController
   # GET /zones/1.json
   def show
     @people = Person.where(zone_id: @zone.id)
+    @people = [] if @people.nil?
+    current_machine = get_current
+    @zone.current_temperature = current_machine['status']['room_temperature']
   end
 
   # GET /zones/new

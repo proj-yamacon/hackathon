@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rest-client'
+gem 'rack-cors', :require => 'rack/cors'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.7'

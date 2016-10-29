@@ -28,4 +28,5 @@ module Hackathon
         resource '*', :headers => :any, :methods => [:get, :post, :options, :patch, :delete]
       end
     end
+ end
 end

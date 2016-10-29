@@ -10,6 +10,8 @@ class ZonesController < ApplicationController
   # GET /zones/1
   # GET /zones/1.json
   def show
+    @people = Person.where(zone_id: @zone.id)
+    puts @people.length
   end
 
   # GET /zones/new

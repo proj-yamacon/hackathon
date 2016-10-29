@@ -21,6 +21,38 @@ class PeopleController < ApplicationController
   def edit
   end
 
+  def enter
+    args = JSON.parse(request.body.read)
+    zone_id = args['zone_id']
+    @person = Person.find(params[:id])
+    @person.zone_id = zone_id
+    @person.save
+
+    # response zone he entered
+    @zone = Zone.find(zone_id)
+    @people = Person.where(zone_id: @zone.id)
+    render 'zones/show'
+  end
+  def exit
+    @person = Person.find(params[:id])
+    zone_id_left = @person.zone_id
+
+    @person.zone_id = nil
+    @person.save
+
+    # error handling
+
+    # response zone he left
+    begin
+      @zone = Zone.find(zone_id_left)
+    rescue
+      render json: {}, status: '404'
+      return
+    end
+    @people = Person.where(zone_id: @zone.id)
+    render 'zones/show'
+  end
+
   # POST /people
   # POST /people.json
   def create

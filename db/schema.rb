@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161029105935) do
+ActiveRecord::Schema.define(version: 20161029115217) do
 
   create_table "people", force: :cascade do |t|
     t.string   "name"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 20161029105935) do
     t.float    "comfortable_humidity"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.integer  "zone_id"
   end
 
   add_index "people", ["name"], name: "index_people_on_name"

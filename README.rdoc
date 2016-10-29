@@ -1,28 +1,36 @@
-== README
+## gems
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Install ruby gems.
 
-Things you may want to cover:
+```
+$ gem install bundler
+$ bundle install
+```
 
-* Ruby version
+## database migration
 
-* System dependencies
+Create and migrate database. See below.
 
-* Configuration
+# Database
 
-* Database creation
+## create
+```
+$ bin/rake db:create
+```
 
-* Database initialization
+## migrate
+```
+$ bin/rake db:migrate
+```
 
-* How to run the test suite
+## seed
+```
+$ bin/rake db:seed
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+# Run
 
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+## launch application server
+```
+$ bin/rails s -b 0.0.0.0 -p 3000
+```

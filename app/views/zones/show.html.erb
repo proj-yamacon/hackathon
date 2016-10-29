@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Zone name:</strong>
+  <%= @zone.zone_name %>
+</p>
+
+<p>
+  <strong>Target temperature:</strong>
+  <%= @zone.target_temperature %>
+</p>
+
+<p>
+  <strong>Current temperature:</strong>
+  <%= @zone.current_temperature %>
+</p>
+
+<%= link_to 'Edit', edit_zone_path(@zone) %> |
+<%= link_to 'Back', zones_path %>

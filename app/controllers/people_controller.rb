@@ -43,7 +43,12 @@ class PeopleController < ApplicationController
     # error handling
 
     # response zone he left
-    @zone = Zone.find(zone_id_left)
+    begin
+      @zone = Zone.find(zone_id_left)
+    rescue
+      render json: {}, status: '404'
+      return
+    end
     @people = Person.where(zone_id: @zone.id)
     render 'zones/show'
   end

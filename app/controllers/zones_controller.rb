@@ -1,10 +1,29 @@
+require 'time'
+
+TIME_DIFF = 25
+
 class ZonesController < ApplicationController
   before_action :set_zone, only: [:show, :edit, :update, :destroy]
 
-  def get_current(machine_id)
+  def get_current_from_api(machine_id)
     url = "https://#{Settings.machine.user}:#{Settings.machine.password}@#{Settings.machine.url_base}/equipments/#{machine_id}/"
     response = RestClient.get url
     return JSON.parse(response.body)
+  end
+
+  def get_current_temperature
+    c = @zone.previous_temperature
+    return @zone.target_temperature if c.nil?
+
+    diff_sec = Time.now - @zone.previous_temperature_update
+    return @zone.target_temperature if diff_sec > TIME_DIFF
+
+    temp_diff = @zone.target_temperature - @zone.previous_temperature
+
+    puts temp_diff
+
+    return c + (temp_diff * diff_sec / TIME_DIFF)
+
   end
 
   # GET /zones
@@ -18,9 +37,9 @@ class ZonesController < ApplicationController
   def show
     @people = Person.where(zone_id: @zone.id)
     @people = [] if @people.nil?
-    current_machine = get_current(@zone.machine_id)
-    current_temperature = current_machine['status']['room_temperature']
-    @zone.current_temperature = current_temperature
+#    current_machine = get_current(@zone.machine_id)
+#    current_temperature = current_machine['status']['room_temperature']
+    @zone.current_temperature = get_current_temperature
   end
 
   # GET /zones/new

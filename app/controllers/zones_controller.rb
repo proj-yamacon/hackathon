@@ -1,37 +1,23 @@
-USER = 'daikin'
-PASSWORD = 'pichonkun'
-URL_BASE = "https://#{USER}:#{PASSWORD}@api-10.daikin.ishikari-dc.net"
-OPERATION_MODE = 4 # cooler
-
-
 class ZonesController < ApplicationController
   before_action :set_zone, only: [:show, :edit, :update, :destroy]
 
   def get_current
     machine_id = 4
-    url = "#{URL_BASE}/equipments/#{machine_id}/"
+    url = "https://#{Settings.machine.user}:#{Settings.machine.password}@#{Settings.machine.url_base}/equipments/#{machine_id}/"
     response = RestClient.get url
+    puts url
     return JSON.parse(response.body)
   end
 
   def get_comfortable_temperature(people, current_temperature)
     temperatures = people.map {|person| person.comfortable_temperature }
     average = people.blank? ? current_temperature : temperatures.inject(0.0){|r,i| r+=i }/temperatures.size
+    average = current_temperature if average.nil?
+    average = 15 if average < 15
+    average = 35 if average > 35
+    average = average.to_i
   end
 
-  def set_target_temperature(target_temperature)
-    machine_id = 4
-    params = {"id": machine_id,
-      "status": {
-        "power": 1,
-        "operation_mode": OPERATION_MODE,
-        "set_temperature": target_temperature,
-        "fan_speed": 0,
-        "fan_direction": 0
-      }
-    }
-    url = "https://#{user}:#{password}@api-10.daikin.ishikari-dc.net/equipments/#{machine_id}/"
-  end
   # GET /zones
   # GET /zones.json
   def index

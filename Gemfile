@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'config'
 gem 'rest-client'
 gem 'rack-cors', :require => 'rack/cors'
 

@@ -1,0 +1,5 @@
+machine:
+  user: 'daikin'
+  password: 'pichonkun'
+  url_base: "api-10.daikin.ishikari-dc.net"
+  operaton_mode: 4 # cooler

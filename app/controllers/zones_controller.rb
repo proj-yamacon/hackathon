@@ -82,6 +82,6 @@ class ZonesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def zone_params
-      params.require(:zone).permit(:zone_name, :target_temperature, :current_temperature)
+      params.require(:zone).permit(:zone_name, :target_temperature, :current_temperature, :machine_id)
     end
 end

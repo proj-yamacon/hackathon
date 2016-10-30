@@ -83,11 +83,12 @@ class PeopleController < ApplicationController
 #    current_temperature = current_machine['status']['room_temperature']
     current_temperature = get_current_temperature
     @zone.target_temperature = get_comfortable_temperature(@people, current_temperature)
-    set_target_temperature(@zone.target_temperature, @zone.machine_id)
 
     @zone.previous_temperature = current_temperature
     @zone.previous_temperature_update = Time.now
     @zone.save
+
+    set_target_temperature(@zone.target_temperature, @zone.machine_id)
 
     render 'zones/show'
   end
@@ -113,11 +114,12 @@ class PeopleController < ApplicationController
 #    current_temperature = current_machine['status']['room_temperature']
     current_temperature = get_current_temperature
     @zone.target_temperature = get_comfortable_temperature(@people, current_temperature)
-    set_target_temperature(@zone.target_temperature, @zone.machine_id)
 
     @zone.previous_temperature = current_temperature
     @zone.previous_temperature_update = Time.now
     @zone.save
+
+    set_target_temperature(@zone.target_temperature, @zone.machine_id)
 
     render 'zones/show'
   end

@@ -88,7 +88,7 @@ class PeopleController < ApplicationController
     end
     @people = Person.where(zone_id: @zone.id)
 
-    current_machine = get_current
+    current_machine = get_current(@zone.machine_id)
     current_temperature = current_machine['status']['room_temperature']
     @zone.target_temperature = get_comfortable_temperature(@people, current_temperature)
     set_target_temperature(@zone.target_temperature, @zone.machine_id)

@@ -1,11 +1,9 @@
 class ZonesController < ApplicationController
   before_action :set_zone, only: [:show, :edit, :update, :destroy]
 
-  def get_current
-    machine_id = 4
+  def get_current(machine_id)
     url = "https://#{Settings.machine.user}:#{Settings.machine.password}@#{Settings.machine.url_base}/equipments/#{machine_id}/"
     response = RestClient.get url
-    puts url
     return JSON.parse(response.body)
   end
 
@@ -20,7 +18,7 @@ class ZonesController < ApplicationController
   def show
     @people = Person.where(zone_id: @zone.id)
     @people = [] if @people.nil?
-    current_machine = get_current
+    current_machine = get_current(@zone.machine_id)
     current_temperature = current_machine['status']['room_temperature']
     @zone.current_temperature = current_temperature
   end

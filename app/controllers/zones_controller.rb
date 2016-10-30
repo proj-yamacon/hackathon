@@ -1,6 +1,8 @@
 USER = 'daikin'
 PASSWORD = 'pichonkun'
 URL_BASE = "https://#{USER}:#{PASSWORD}@api-10.daikin.ishikari-dc.net"
+OPERATION_MODE = 4 # cooler
+
 
 class ZonesController < ApplicationController
   before_action :set_zone, only: [:show, :edit, :update, :destroy]
@@ -17,6 +19,19 @@ class ZonesController < ApplicationController
     average = people.blank? ? current_temperature : temperatures.inject(0.0){|r,i| r+=i }/temperatures.size
   end
 
+  def set_target_temperature(target_temperature)
+    machine_id = 4
+    params = {"id": machine_id,
+      "status": {
+        "power": 1,
+        "operation_mode": OPERATION_MODE,
+        "set_temperature": target_temperature,
+        "fan_speed": 0,
+        "fan_direction": 0
+      }
+    }
+    url = "https://#{user}:#{password}@api-10.daikin.ishikari-dc.net/equipments/#{machine_id}/"
+  end
   # GET /zones
   # GET /zones.json
   def index

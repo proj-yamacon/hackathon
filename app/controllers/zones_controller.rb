@@ -1,37 +1,14 @@
-USER = 'daikin'
-PASSWORD = 'pichonkun'
-URL_BASE = "https://#{USER}:#{PASSWORD}@api-10.daikin.ishikari-dc.net"
-OPERATION_MODE = 4 # cooler
-
-
 class ZonesController < ApplicationController
   before_action :set_zone, only: [:show, :edit, :update, :destroy]
 
   def get_current
     machine_id = 4
-    url = "#{URL_BASE}/equipments/#{machine_id}/"
+    url = "https://#{Settings.machine.user}:#{Settings.machine.password}@#{Settings.machine.url_base}/equipments/#{machine_id}/"
     response = RestClient.get url
+    puts url
     return JSON.parse(response.body)
   end
 
-  def get_comfortable_temperature(people, current_temperature)
-    temperatures = people.map {|person| person.comfortable_temperature }
-    average = people.blank? ? current_temperature : temperatures.inject(0.0){|r,i| r+=i }/temperatures.size
-  end
-
-  def set_target_temperature(target_temperature)
-    machine_id = 4
-    params = {"id": machine_id,
-      "status": {
-        "power": 1,
-        "operation_mode": OPERATION_MODE,
-        "set_temperature": target_temperature,
-        "fan_speed": 0,
-        "fan_direction": 0
-      }
-    }
-    url = "https://#{user}:#{password}@api-10.daikin.ishikari-dc.net/equipments/#{machine_id}/"
-  end
   # GET /zones
   # GET /zones.json
   def index
@@ -46,7 +23,6 @@ class ZonesController < ApplicationController
     current_machine = get_current
     current_temperature = current_machine['status']['room_temperature']
     @zone.current_temperature = current_temperature
-    @zone.target_temperature = get_comfortable_temperature(@people, current_temperature)
   end
 
   # GET /zones/new
@@ -106,6 +82,6 @@ class ZonesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def zone_params
-      params.require(:zone).permit(:zone_name, :target_temperature, :current_temperature)
+      params.require(:zone).permit(:zone_name, :target_temperature, :current_temperature, :machine_id)
     end
 end

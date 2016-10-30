@@ -1,3 +1,5 @@
+require 'time'
+
 class PeopleController < ApplicationController
   before_action :set_person, only: [:show, :edit, :update, :destroy]
 
@@ -21,10 +23,25 @@ class PeopleController < ApplicationController
   def edit
   end
 
-  def get_current(machine_id)
+  def get_current_from_api(machine_id)
     url = "https://#{Settings.machine.user}:#{Settings.machine.password}@#{Settings.machine.url_base}/equipments/#{machine_id}/"
     response = RestClient.get url
     return JSON.parse(response.body)
+  end
+
+  def get_current_temperature
+    c = @zone.previous_temperature
+    return @zone.target_temperature if c.nil?
+
+    diff_sec = Time.now - @zone.previous_temperature_update
+    return @zone.target_temperature if diff_sec > TIME_DIFF
+
+    temp_diff = @zone.target_temperature - @zone.previous_temperature
+
+    puts temp_diff
+
+    return c + (temp_diff * diff_sec / TIME_DIFF)
+
   end
 
   def get_comfortable_temperature(people, current_temperature)
@@ -62,11 +79,15 @@ class PeopleController < ApplicationController
     @zone = Zone.find(zone_id)
     @people = Person.where(zone_id: @zone.id)
 
-    current_machine = get_current(@zone.machine_id)
-    current_temperature = current_machine['status']['room_temperature']
+#    current_machine = get_current(@zone.machine_id)
+#    current_temperature = current_machine['status']['room_temperature']
+    current_temperature = get_current_temperature
     @zone.target_temperature = get_comfortable_temperature(@people, current_temperature)
     set_target_temperature(@zone.target_temperature, @zone.machine_id)
     @zone.save
+
+    @zone.previous_temperature = current_temperature
+    @zone.previous_temperature_update = Time.now
 
     render 'zones/show'
   end
@@ -88,11 +109,15 @@ class PeopleController < ApplicationController
     end
     @people = Person.where(zone_id: @zone.id)
 
-    current_machine = get_current(@zone.machine_id)
-    current_temperature = current_machine['status']['room_temperature']
+#    current_machine = get_current(@zone.machine_id)
+#    current_temperature = current_machine['status']['room_temperature']
+    current_temperature = get_current_temperature
     @zone.target_temperature = get_comfortable_temperature(@people, current_temperature)
     set_target_temperature(@zone.target_temperature, @zone.machine_id)
     @zone.save
+
+    @zone.previous_temperature = current_temperature
+    @zone.previous_temperature_update = Time.now
 
     render 'zones/show'
   end

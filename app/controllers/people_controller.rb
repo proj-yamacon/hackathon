@@ -32,7 +32,7 @@ class PeopleController < ApplicationController
     average = people.blank? ? current_temperature : temperatures.inject(0.0){|r,i| r+=i }/temperatures.size
     average = current_temperature if average.nil?
     average = 20 if average < 20
-    average = 35 if average > 35
+    average = 30 if average > 30
     average = average.to_i
   end
 

@@ -14,6 +14,10 @@
   <strong>Current temperature:</strong>
   <%= @zone.current_temperature %>
 </p>
+<p>
+  <strong>Machine ID:</strong>
+  <%= @zone.machine_id %>
+</p>
 
 <%= link_to 'Edit', edit_zone_path(@zone) %> |
 <%= link_to 'Back', zones_path %>

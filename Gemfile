@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'config'
 gem 'rest-client'
 gem 'rack-cors', :require => 'rack/cors'
 
@@ -22,6 +23,8 @@ gem 'turbolinks'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
+gem 'jquery-rails'
+# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 # Use jquery as the JavaScript library
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder

@@ -21,6 +21,39 @@ class PeopleController < ApplicationController
   def edit
   end
 
+  def get_current
+    machine_id = 4
+    url = "https://#{Settings.machine.user}:#{Settings.machine.password}@#{Settings.machine.url_base}/equipments/#{machine_id}/"
+    response = RestClient.get url
+    puts url
+    return JSON.parse(response.body)
+  end
+
+  def get_comfortable_temperature(people, current_temperature)
+    temperatures = people.map {|person| person.comfortable_temperature }
+    average = people.blank? ? current_temperature : temperatures.inject(0.0){|r,i| r+=i }/temperatures.size
+    average = current_temperature if average.nil?
+    average = 15 if average < 15
+    average = 35 if average > 35
+    average = average.to_i
+  end
+
+  def set_target_temperature(target_temperature)
+    machine_id = 4
+    params = {"id": machine_id,
+      "status": {
+        "power": 1,
+        "operation_mode": 4,
+        "set_temperature": target_temperature,
+        "fan_speed": 3,
+        "fan_direction": 7
+      }
+    }
+    url = "https://#{user}:#{password}@api-10.daikin.ishikari-dc.net/equipments/#{machine_id}/"
+    response = RestClient.post url, params.to_json, {content_type: :json, accept: :json}
+    return JSON.parse(response.body)
+  end
+
   def enter
     args = JSON.parse(request.body.read)
     zone_id = args['zone_id']
@@ -31,6 +64,12 @@ class PeopleController < ApplicationController
     # response zone he entered
     @zone = Zone.find(zone_id)
     @people = Person.where(zone_id: @zone.id)
+
+    current_machine = get_current
+    current_temperature = current_machine['status']['room_temperature']
+    @zone.target_temperature = get_comfortable_temperature(@people, current_temperature)
+    @zone.save
+
     render 'zones/show'
   end
   def exit
@@ -50,6 +89,12 @@ class PeopleController < ApplicationController
       return
     end
     @people = Person.where(zone_id: @zone.id)
+
+    current_machine = get_current
+    current_temperature = current_machine['status']['room_temperature']
+    @zone.target_temperature = get_comfortable_temperature(@people, current_temperature)
+    @zone.save
+
     render 'zones/show'
   end
 

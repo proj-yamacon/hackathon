@@ -9,15 +9,6 @@ class ZonesController < ApplicationController
     return JSON.parse(response.body)
   end
 
-  def get_comfortable_temperature(people, current_temperature)
-    temperatures = people.map {|person| person.comfortable_temperature }
-    average = people.blank? ? current_temperature : temperatures.inject(0.0){|r,i| r+=i }/temperatures.size
-    average = current_temperature if average.nil?
-    average = 15 if average < 15
-    average = 35 if average > 35
-    average = average.to_i
-  end
-
   # GET /zones
   # GET /zones.json
   def index
@@ -32,7 +23,6 @@ class ZonesController < ApplicationController
     current_machine = get_current
     current_temperature = current_machine['status']['room_temperature']
     @zone.current_temperature = current_temperature
-    @zone.target_temperature = get_comfortable_temperature(@people, current_temperature)
   end
 
   # GET /zones/new
